@@ -71,5 +71,18 @@ public class SingleNodeTest {
     assertEquals(originalList, resultList);
   }
 
-  
+  @Test
+  public void testToListAndFromListWithEdgeCaseValues() {
+    List<Integer> edgeCaseList = List.of(Integer.MAX_VALUE, -200, 0, 450, Integer.MIN_VALUE);
+    SingleNode head = SingleNode.fromList(edgeCaseList);
+    List<Integer> resultList = head.toList();
+
+    assertEquals(edgeCaseList, resultList);
+  }
+
+  @Test
+  public void testFromListAndNullHandling() {
+    assertThrows(IllegalArgumentException.class,
+      () -> SingleNode.fromList(null)) ;
+  }
 }

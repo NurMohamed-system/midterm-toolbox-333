@@ -213,10 +213,5 @@ public class Toolbox {
    * @return the person with the highest score, or the first person lexicographically if there is a tie
    * @throws IllegalArgumentException if the scores are null or empty
    */
-  public static String topScorer(Map<String, Integer> scores) {
-    if (scores == null || scores.isEmpty()) {
-      throw new IllegalArgumentException("Scares cannot be null or empty");
-    }
-    return null;
-  }
+ 
 }
