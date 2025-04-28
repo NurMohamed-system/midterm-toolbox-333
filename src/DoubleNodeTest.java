@@ -71,6 +71,19 @@ public class DoubleNodeTest {
 
     assertEquals(originalList, resultList);
   }
-  
- 
+
+  @Test
+  public void testToListAndFromListWithEdgeCaseValues() {
+    List<Integer> edgeCaseList = List.of(Integer.MIN_VALUE, 101, -87, 0, Integer.MAX_VALUE);
+    DoubleNode head = DoubleNode.fromList(edgeCaseList);
+    List<Integer> resultList = head.toList();
+
+    assertEquals(edgeCaseList, resultList);
+  }
+
+  @Test
+  public void testFromListAndNullHandling() {
+    assertThrows(IllegalArgumentException.class,
+      () -> DoubleNode.fromList(null));
+  }
 }
