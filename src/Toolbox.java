@@ -303,15 +303,17 @@ public class Toolbox {
     }
     return bestName;
   }
+
+  class SingleNode {
+    int value;
+    SingleNode next;
+  }
+  
+  class DoubleNode {
+    int value;
+    DoubleNode prev;
+    DoubleNode next;
+  }
 }  
 
-class SingleNode {
-  int value;
-  SingleNode next;
-}
 
-class DoubleNode {
-  int value;
-  DoubleNode prev;
-  DoubleNode next;
-}
