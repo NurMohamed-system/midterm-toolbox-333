@@ -17,13 +17,14 @@ public class Toolbox {
         throw new IllegalArgumentException("Head cannot be null.");
     }
     int count = 0;
-    SingleNode current = head;
-    while (current != null) {
-        count++;
-        current = current.next;
+    SingleNode current = head;  // Start traversal at head
+    while (current != null) {   // Traverse until end of list
+        count++;               // Increment node counter
+        current = current.next; // Move to next node
     }
     return count;
-}
+  }
+
 
   /**
    * Finds the tail of a singly linked list given the head.
@@ -37,11 +38,11 @@ public class Toolbox {
         throw new IllegalArgumentException("Head cannot be null.");
     }
     SingleNode current = head;
-    while (current.next != null) {
+    while (current.next != null) {  // Traverse until last node
         current = current.next;
     }
-    return current;
-}
+    return current;  
+  }
   /**
    * Finds the head of a doubly linked list given the tail.
    *
@@ -54,10 +55,10 @@ public class Toolbox {
         throw new IllegalArgumentException("Tail cannot be null.");
     }
     DoubleNode current = tail;
-    while (current.prev != null) {
+    while (current.prev != null) {  // Traverse backwards
         current = current.prev;
     }
-    return current;
+    return current;  // Return node with null prev pointer
   }
 
   /**
@@ -68,18 +69,19 @@ public class Toolbox {
    * @throws IllegalArgumentException if the head is null
    */
   public static Map<Integer, Integer> countOccurrences(SingleNode head) {
-        if (head == null) {
-            throw new IllegalArgumentException("Head cannot be null.");
-        }
-        Map<Integer, Integer> counts = new HashMap<>();
-        SingleNode current = head;
-        while (current != null) {
-            int val = current.value;
-            counts.put(val, counts.getOrDefault(val, 0) + 1);
-            current = current.next;
-        }
-        return counts;
+    if (head == null) {
+        throw new IllegalArgumentException("Head cannot be null.");
     }
+    Map<Integer, Integer> counts = new HashMap<>();
+    SingleNode current = head;
+    while (current != null) {  // Traverse entire list
+        // Update count for current data value
+        while (current != null) {        // Traverse list
+            counts.merge(current.data, 1, Integer::sum); // Update count
+            current = current.next;
+    }
+    return counts;
+  }
 
   /**
    * Removes a node from a doubly linked list.
@@ -91,13 +93,13 @@ public class Toolbox {
     if (node == null) {
         throw new IllegalArgumentException("Node cannot be null.");
     }
-    DoubleNode prevNode = node.prev;
-    DoubleNode nextNode = node.next;
-    if (prevNode != null) {
-        prevNode.next = nextNode;
+    // Update previous node's next pointer
+    if (node.prev != null) {
+        node.prev.next = node.next;
     }
-    if (nextNode != null) {
-        nextNode.prev = prevNode;
+    
+    if (node.next != null) {
+        node.next.prev = node.prev;
     }
   }
 
@@ -111,18 +113,16 @@ public class Toolbox {
    */
   public static SingleNode findNthElement(SingleNode head, int n) {
     if (head == null || n < 0) {
-        throw new IllegalArgumentException("Head cannot be null and n cannot be negative.");
+        throw new IllegalArgumentException("Invalid arguments.");
     }
     SingleNode current = head;
     int index = 0;
-    while (current != null) {
-        if (index == n) {
-            return current;
-        }
+    
+    while (current != null && index < n) {
         current = current.next;
         index++;
     }
-    return null;
+    return current;  
   }
 
   /**
@@ -134,11 +134,12 @@ public class Toolbox {
    */
   public static void insertNode(SingleNode node, SingleNode newNode) {
     if (node == null || newNode == null) {
-        throw new IllegalArgumentException("Node and newNode cannot be null.");
+        throw new IllegalArgumentException("Nodes cannot be null.");
     }
-    newNode.next = node.next;
-    node.next = newNode;
-}
+    newNode.next = node.next;  
+    node.next = newNode;      
+  }
+
 
 
   /**
@@ -162,11 +163,14 @@ public class Toolbox {
     }
     SingleNode prev = head;
     SingleNode current = head.next;
+
     while (current != null && current.next != null) {
-        if (current.value > current.next.value) {
+        if (current.data > current.next.data) {
+            // Bypass current node
             prev.next = current.next;
-            current = current.next;
+            current = prev.next;  // Move to next candidate
         } else {
+            // Move pointers forward
             prev = current;
             current = current.next;
         }
@@ -189,16 +193,15 @@ public class Toolbox {
      * @throws IllegalArgumentException if the queue is null
      */
     public static void tripleValues(Queue<Integer> queue) {
-      if (queue == null) {
-          throw new IllegalArgumentException("Queue cannot be null");
-      }
-      int size = queue.size();
-      for (int i = 0; i < size; i++) {
-          int value = queue.remove();
-          queue.add(value * 3);
-      }
-  }
-
+        if (queue == null) {
+            throw new IllegalArgumentException("Queue cannot be null.");
+        }
+        int size = queue.size();
+        for (int i = 0; i < size; i++) {
+            int val = queue.poll();    // Remove element
+            queue.add(val * 3);       // Add tripled value
+        }
+    }
 
   /**
    * Rotates a queue to the left by the specified number of positions in-place.
@@ -219,13 +222,12 @@ public class Toolbox {
    */
   public static void rotateQueueLeft(Queue<Integer> queue, int k) {
     if (queue == null || k < 0) {
-        throw new IllegalArgumentException("Queue cannot be null and k cannot be negative.");
+        throw new IllegalArgumentException("Invalid arguments.");
     }
-    int size = queue.size();
-    if (size == 0) return;
-    k = k % size;
-    for (int i = 0; i < k; i++) {
-        queue.add(queue.remove());
+    if (queue.isEmpty()) return;
+    int effectiveK = k % queue.size();  // Handle large k values
+    for (int i = 0; i < effectiveK; i++) {
+        queue.add(queue.poll());  // Move front element to end
     }
   }
 
@@ -246,20 +248,16 @@ public class Toolbox {
    */
   public static boolean hasBalancedParentheses(String input) {
     if (input == null) {
-        throw new IllegalArgumentException("Input string cannot be null.");
+        throw new IllegalArgumentException("Input cannot be null.");
     }
-    Stack<Character> stack = new Stack<>();
+    int balance = 0;
     for (char c : input.toCharArray()) {
-        if (c == '(') {
-            stack.push(c);
-        } else if (c == ')') {
-            if (stack.isEmpty()) {
-                return false;
-            }
-            stack.pop();
-        }
+        if (c == '(') balance++;      // Increase on opening
+        else if (c == ')') balance--; // Decrease on closing
+        
+        if (balance < 0) return false; // More closings than openings
     }
-    return stack.isEmpty();
+    return balance == 0;  // All openings must be closed
   }
 
   /**
@@ -285,35 +283,23 @@ public class Toolbox {
    */
   public static String topScorer(Map<String, Integer> scores) {
     if (scores == null || scores.isEmpty()) {
-        throw new IllegalArgumentException("Scores cannot be null or empty");
+        throw new IllegalArgumentException("Invalid scores.");
     }
-    int maxScore = Integer.MIN_VALUE;
-    String bestName = null;
+    String topName = null;
+    int topScore = Integer.MIN_VALUE;
+    
     for (Map.Entry<String, Integer> entry : scores.entrySet()) {
         String name = entry.getKey();
         int score = entry.getValue();
-        if (score > maxScore) {
-            maxScore = score;
-            bestName = name;
-        } else if (score == maxScore) {
-            if (bestName == null || name.compareTo(bestName) < 0) {
-                bestName = name;
-            }
+        
+        // Update if higher score or lex order tie-breaker
+        if (score > topScore || 
+           (score == topScore && name.compareTo(topName) < 0)) {
+            topScore = score;
+            topName = name;
         }
     }
-    return bestName;
+    return topName;
   }
-
-  class SingleNode {
-    int value;
-    SingleNode next;
-  }
-  
-  class DoubleNode {
-    int value;
-    DoubleNode prev;
-    DoubleNode next;
-  }
-}  
-
+}
 
